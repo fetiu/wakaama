@@ -468,8 +468,8 @@ static void prv_resultCallback(lwm2m_context_t * contextP,
         uint16_t block_size = 0;
         uint8_t block_more = 0;
         block_info_t block_info;
-        int has_block2 = coap_get_header_block2(message, &block_num, &block_more, &block_size, NULL);
-        if (has_block2)
+        int has_block = coap_get_header_block(message, &block_num, &block_more, &block_size, NULL);
+        if (has_block)
         {
             block_info.block_num = block_num;
             block_info.block_size = block_size;
