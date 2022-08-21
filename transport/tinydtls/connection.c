@@ -547,6 +547,28 @@ int lwm2m_connection_rehandshake(lwm2m_dtls_connection_t *connP, bool sendCloseN
     return result;
 }
 
+void lwm2m_connection_step(struct timeval *timeout)
+{
+    if (!dtls_context) {
+        return;
+    }
+    dtls_tick_t now, next;
+    dtls_ticks(&now);
+
+    // retransmit timed-out packets & get next expiration
+    dtls_check_retransmit(dtls_context, &next);
+    if (next == 0) {
+        return;
+    }
+    struct timeval dtls_timeout;
+    timeval_from_ticks(next - now, &dtls_timeout);
+
+    // update if dtls retransmit requires early timeout
+    if (dtls_timeout.tv_sec < timeout->tv_sec) {
+        *timeout = dtls_timeout;
+    }
+}
+
 uint8_t lwm2m_buffer_send(void *sessionH, uint8_t *buffer, size_t length, void *userdata) {
     lwm2m_dtls_connection_t *connP = (lwm2m_dtls_connection_t *)sessionH;
 

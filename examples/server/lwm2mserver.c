@@ -1187,6 +1187,8 @@ int main(int argc, char *argv[])
         tv.tv_sec = 60;
         tv.tv_usec = 0;
 
+        lwm2m_connection_step(&tv);
+        
         result = lwm2m_step(lwm2mH, &(tv.tv_sec));
         if (result != 0)
         {

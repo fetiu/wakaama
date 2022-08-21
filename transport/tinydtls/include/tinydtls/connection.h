@@ -74,4 +74,7 @@ int lwm2m_connection_handle_packet(lwm2m_dtls_connection_t *connP, uint8_t *buff
 // rehandshake a connection, useful when your NAT timed out and your client has a new IP/PORT
 int lwm2m_connection_rehandshake(lwm2m_dtls_connection_t *connP, bool sendCloseNotify);
 
+// perform any required pending operation and adjust timeout to the optimal time interval to wait in seconds.
+void lwm2m_connection_step(struct timeval *timeout);
+
 #endif
