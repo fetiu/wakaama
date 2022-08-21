@@ -399,7 +399,7 @@ char * coap_get_packet_uri_as_string(coap_packet_t * packet)
     // we omit the protocol part as well as host and port if not in the options
     //
     char * output;
-    
+
     char * path_string = coap_get_multi_option_as_path_string(packet->uri_path);
     size_t path_len = strlen(path_string);
     char * query_string = coap_get_multi_option_as_query_string(packet->uri_query);
@@ -410,12 +410,12 @@ char * coap_get_packet_uri_as_string(coap_packet_t * packet)
     len += is_non_std_coap_port(packet->uri_port) ? (int)(nDigits(packet->uri_port)*sizeof(char)) : 0;
     len += 1 > path_len ? 1 : path_len; // "/" or path
     len += query_len;
-    
+
     output = (char *) lwm2m_malloc(len + 1);
     if(output == NULL){
       return NULL;
     }
-    
+
     strcpy(output, "//");
     strncat(output, (char *)packet->uri_host, packet->uri_host_len);
     if (1 > path_len)
@@ -427,12 +427,12 @@ char * coap_get_packet_uri_as_string(coap_packet_t * packet)
         strncat(output, path_string, path_len);
     }
     strncat(output, query_string, query_len);
-    
+
     output[len] = 0;
-    
+
     lwm2m_free(path_string);
     lwm2m_free(query_string);
-    
+
     return output;
 }
 
@@ -1519,7 +1519,7 @@ coap_set_header_block1(void *packet, uint32_t num, uint8_t more, uint16_t size)
 int
 coap_get_header_block(void *packet, uint32_t *num, uint8_t *more, uint16_t *size, uint32_t *offset)
 {
-    if (1 == coap_get_header_block1(packet, num, more, size, offset))
+    if (1 == coap_get_header_block2(packet, num, more, size, offset))
     {
         return 1;
     }
@@ -1535,7 +1535,7 @@ coap_get_header_size(void *packet, uint32_t *size)
   coap_packet_t *const coap_pkt = (coap_packet_t *) packet;
 
   if (!IS_OPTION(coap_pkt, COAP_OPTION_SIZE)) return 0;
-  
+
   *size = coap_pkt->size;
   return 1;
 }
